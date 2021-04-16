@@ -89,3 +89,36 @@ add_filter('comments_template', function ($comments_template) {
 
     return $comments_template;
 }, 100);
+
+
+//JWT auth whitelist, för att slippa auth vid varje request
+
+add_filter(
+	'jwt_auth_whitelist',
+	function ( $endpoints ) {
+		$whitelists = array(
+			'/wp-json/oembed/1.0/*',
+			'/wp-json/wp/v2/*',
+			'/wp-json/post-views-counter/*',
+			'/wp-json/yoast/v1/*',
+			'/wp-json/yoast/v1/myyoast/*',
+			'/wp-json/wc/blocks/*',
+			'/wp-json/wc/store/*',
+			'/wp-json/wc/v1/*',
+			'/wp-json/wc/v2/*',
+			'/wp-json/wc/v3/*',
+			'/wp-json/wccom-site/v1/*',
+			'/wp-json/wc-analytics/*',
+			'/wp-json/wc-admin/*',
+			'/wp-json/me/v1/*',
+		);
+
+		foreach ( $whitelists as $whitelist ) {
+			if ( ! in_array( $whitelist, $endpoints, true ) ) {
+				array_push( $endpoints, $whitelist );
+			}
+		}
+
+		return $endpoints;
+	}
+);
